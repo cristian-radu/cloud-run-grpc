@@ -1,11 +1,5 @@
 module github.com/cristian-radu/cloud-run-grpc-client
 
-replace github.com/cristian-radu/cloud-run-grpc-client/pkg/pb/run => /home/cristian/work/cloud-run-grpc-client/pkg/pb/run
-
-replace github.com/cristian-radu/cloud-run-grpc-client/pkg/client => /home/cristian/work/cloud-run-grpc-client/pkg/client
-
-replace github.com/cristian-radu/cloud-run-grpc-client/pkg/test => /home/cristian/work/cloud-run-grpc-client/pkg/test
-
 go 1.16
 
 require (
