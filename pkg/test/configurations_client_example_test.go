@@ -19,8 +19,8 @@ package test
 import (
 	"context"
 
-	run "github.com/cristian-radu/cloud-run-grpc-client/pkg/client"
-	runpb "github.com/cristian-radu/cloud-run-grpc-client/pkg/pb/run"
+	run "github.com/cristian-radu/cloud-run-grpc/pkg/client"
+	pb "github.com/cristian-radu/cloud-run-grpc/pkg/pb"
 )
 
 func ExampleNewConfigurationsClient() {
@@ -43,7 +43,7 @@ func ExampleConfigurationsClient_GetConfiguration() {
 	}
 	defer c.Close()
 
-	req := &runpb.GetConfigurationRequest{
+	req := &pb.GetConfigurationRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.GetConfiguration(ctx, req)
@@ -62,7 +62,7 @@ func ExampleConfigurationsClient_ListConfigurations() {
 	}
 	defer c.Close()
 
-	req := &runpb.ListConfigurationsRequest{
+	req := &pb.ListConfigurationsRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.ListConfigurations(ctx, req)

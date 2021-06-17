@@ -4,7 +4,7 @@
 // 	protoc        v3.15.3
 // source: google/cloud/run/v1/common.proto
 
-package run
+package pb
 
 import (
 	proto "github.com/golang/protobuf/proto"

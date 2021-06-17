@@ -20,7 +20,7 @@ import (
 	"context"
 	"math"
 
-	runpb "github.com/cristian-radu/cloud-run-grpc-client/pkg/pb/run"
+	pb "github.com/cristian-radu/cloud-run-grpc/pkg/pb"
 	"github.com/golang/protobuf/proto"
 	gax "github.com/googleapis/gax-go/v2"
 	"google.golang.org/api/iterator"
@@ -61,7 +61,7 @@ type internalAuthorizedDomainsClient interface {
 	Close() error
 	setGoogleClientInfo(...string)
 	Connection() *grpc.ClientConn
-	ListAuthorizedDomains(context.Context, *runpb.ListAuthorizedDomainsRequest, ...gax.CallOption) *AuthorizedDomainIterator
+	ListAuthorizedDomains(context.Context, *pb.ListAuthorizedDomainsRequest, ...gax.CallOption) *AuthorizedDomainIterator
 }
 
 // AuthorizedDomainsClient is a client for interacting with Cloud Run Admin API.
@@ -97,7 +97,7 @@ func (c *AuthorizedDomainsClient) Connection() *grpc.ClientConn {
 }
 
 // ListAuthorizedDomains list authorized domains.
-func (c *AuthorizedDomainsClient) ListAuthorizedDomains(ctx context.Context, req *runpb.ListAuthorizedDomainsRequest, opts ...gax.CallOption) *AuthorizedDomainIterator {
+func (c *AuthorizedDomainsClient) ListAuthorizedDomains(ctx context.Context, req *pb.ListAuthorizedDomainsRequest, opts ...gax.CallOption) *AuthorizedDomainIterator {
 	return c.internalClient.ListAuthorizedDomains(ctx, req, opts...)
 }
 
@@ -115,7 +115,7 @@ type authorizedDomainsGRPCClient struct {
 	CallOptions **AuthorizedDomainsCallOptions
 
 	// The gRPC API client.
-	authorizedDomainsClient runpb.AuthorizedDomainsClient
+	authorizedDomainsClient pb.AuthorizedDomainsClient
 
 	// The x-goog-* metadata to be sent with each request.
 	xGoogMetadata metadata.MD
@@ -147,7 +147,7 @@ func NewAuthorizedDomainsClient(ctx context.Context, opts ...option.ClientOption
 	c := &authorizedDomainsGRPCClient{
 		connPool:                connPool,
 		disableDeadlines:        disableDeadlines,
-		authorizedDomainsClient: runpb.NewAuthorizedDomainsClient(connPool),
+		authorizedDomainsClient: pb.NewAuthorizedDomainsClient(connPool),
 		CallOptions:             &client.CallOptions,
 	}
 	c.setGoogleClientInfo()
@@ -179,13 +179,13 @@ func (c *authorizedDomainsGRPCClient) Close() error {
 	return c.connPool.Close()
 }
 
-func (c *authorizedDomainsGRPCClient) ListAuthorizedDomains(ctx context.Context, req *runpb.ListAuthorizedDomainsRequest, opts ...gax.CallOption) *AuthorizedDomainIterator {
+func (c *authorizedDomainsGRPCClient) ListAuthorizedDomains(ctx context.Context, req *pb.ListAuthorizedDomainsRequest, opts ...gax.CallOption) *AuthorizedDomainIterator {
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).ListAuthorizedDomains[0:len((*c.CallOptions).ListAuthorizedDomains):len((*c.CallOptions).ListAuthorizedDomains)], opts...)
 	it := &AuthorizedDomainIterator{}
-	req = proto.Clone(req).(*runpb.ListAuthorizedDomainsRequest)
-	it.InternalFetch = func(pageSize int, pageToken string) ([]*runpb.AuthorizedDomain, string, error) {
-		var resp *runpb.ListAuthorizedDomainsResponse
+	req = proto.Clone(req).(*pb.ListAuthorizedDomainsRequest)
+	it.InternalFetch = func(pageSize int, pageToken string) ([]*pb.AuthorizedDomain, string, error) {
+		var resp *pb.ListAuthorizedDomainsResponse
 		req.PageToken = pageToken
 		if pageSize > math.MaxInt32 {
 			req.PageSize = math.MaxInt32
@@ -218,9 +218,9 @@ func (c *authorizedDomainsGRPCClient) ListAuthorizedDomains(ctx context.Context,
 	return it
 }
 
-// AuthorizedDomainIterator manages a stream of *runpb.AuthorizedDomain.
+// AuthorizedDomainIterator manages a stream of *pb.AuthorizedDomain.
 type AuthorizedDomainIterator struct {
-	items    []*runpb.AuthorizedDomain
+	items    []*pb.AuthorizedDomain
 	pageInfo *iterator.PageInfo
 	nextFunc func() error
 
@@ -235,7 +235,7 @@ type AuthorizedDomainIterator struct {
 	// InternalFetch returns results from a single call to the underlying RPC.
 	// The number of results is no greater than pageSize.
 	// If there are no more results, nextPageToken is empty and err is nil.
-	InternalFetch func(pageSize int, pageToken string) (results []*runpb.AuthorizedDomain, nextPageToken string, err error)
+	InternalFetch func(pageSize int, pageToken string) (results []*pb.AuthorizedDomain, nextPageToken string, err error)
 }
 
 // PageInfo supports pagination. See the google.golang.org/api/iterator package for details.
@@ -245,8 +245,8 @@ func (it *AuthorizedDomainIterator) PageInfo() *iterator.PageInfo {
 
 // Next returns the next result. Its second return value is iterator.Done if there are no more
 // results. Once Next returns Done, all subsequent calls will return Done.
-func (it *AuthorizedDomainIterator) Next() (*runpb.AuthorizedDomain, error) {
-	var item *runpb.AuthorizedDomain
+func (it *AuthorizedDomainIterator) Next() (*pb.AuthorizedDomain, error) {
+	var item *pb.AuthorizedDomain
 	if err := it.nextFunc(); err != nil {
 		return item, err
 	}

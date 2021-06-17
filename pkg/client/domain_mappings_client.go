@@ -21,7 +21,7 @@ import (
 	"math"
 	"time"
 
-	runpb "github.com/cristian-radu/cloud-run-grpc-client/pkg/pb/run"
+	pb "github.com/cristian-radu/cloud-run-grpc/pkg/pb"
 	gax "github.com/googleapis/gax-go/v2"
 	"google.golang.org/api/option"
 	"google.golang.org/api/option/internaloption"
@@ -67,10 +67,10 @@ type internalDomainMappingsClient interface {
 	Close() error
 	setGoogleClientInfo(...string)
 	Connection() *grpc.ClientConn
-	CreateDomainMapping(context.Context, *runpb.CreateDomainMappingRequest, ...gax.CallOption) (*runpb.DomainMapping, error)
-	DeleteDomainMapping(context.Context, *runpb.DeleteDomainMappingRequest, ...gax.CallOption) (*metapb.Status, error)
-	GetDomainMapping(context.Context, *runpb.GetDomainMappingRequest, ...gax.CallOption) (*runpb.DomainMapping, error)
-	ListDomainMappings(context.Context, *runpb.ListDomainMappingsRequest, ...gax.CallOption) (*runpb.ListDomainMappingsResponse, error)
+	CreateDomainMapping(context.Context, *pb.CreateDomainMappingRequest, ...gax.CallOption) (*pb.DomainMapping, error)
+	DeleteDomainMapping(context.Context, *pb.DeleteDomainMappingRequest, ...gax.CallOption) (*metapb.Status, error)
+	GetDomainMapping(context.Context, *pb.GetDomainMappingRequest, ...gax.CallOption) (*pb.DomainMapping, error)
+	ListDomainMappings(context.Context, *pb.ListDomainMappingsRequest, ...gax.CallOption) (*pb.ListDomainMappingsResponse, error)
 }
 
 // DomainMappingsClient is a client for interacting with Cloud Run Admin API.
@@ -106,22 +106,22 @@ func (c *DomainMappingsClient) Connection() *grpc.ClientConn {
 }
 
 // CreateDomainMapping create a new domain mapping.
-func (c *DomainMappingsClient) CreateDomainMapping(ctx context.Context, req *runpb.CreateDomainMappingRequest, opts ...gax.CallOption) (*runpb.DomainMapping, error) {
+func (c *DomainMappingsClient) CreateDomainMapping(ctx context.Context, req *pb.CreateDomainMappingRequest, opts ...gax.CallOption) (*pb.DomainMapping, error) {
 	return c.internalClient.CreateDomainMapping(ctx, req, opts...)
 }
 
 // DeleteDomainMapping delete a domain mapping.
-func (c *DomainMappingsClient) DeleteDomainMapping(ctx context.Context, req *runpb.DeleteDomainMappingRequest, opts ...gax.CallOption) (*metapb.Status, error) {
+func (c *DomainMappingsClient) DeleteDomainMapping(ctx context.Context, req *pb.DeleteDomainMappingRequest, opts ...gax.CallOption) (*metapb.Status, error) {
 	return c.internalClient.DeleteDomainMapping(ctx, req, opts...)
 }
 
 // GetDomainMapping get information about a domain mapping.
-func (c *DomainMappingsClient) GetDomainMapping(ctx context.Context, req *runpb.GetDomainMappingRequest, opts ...gax.CallOption) (*runpb.DomainMapping, error) {
+func (c *DomainMappingsClient) GetDomainMapping(ctx context.Context, req *pb.GetDomainMappingRequest, opts ...gax.CallOption) (*pb.DomainMapping, error) {
 	return c.internalClient.GetDomainMapping(ctx, req, opts...)
 }
 
 // ListDomainMappings list domain mappings.
-func (c *DomainMappingsClient) ListDomainMappings(ctx context.Context, req *runpb.ListDomainMappingsRequest, opts ...gax.CallOption) (*runpb.ListDomainMappingsResponse, error) {
+func (c *DomainMappingsClient) ListDomainMappings(ctx context.Context, req *pb.ListDomainMappingsRequest, opts ...gax.CallOption) (*pb.ListDomainMappingsResponse, error) {
 	return c.internalClient.ListDomainMappings(ctx, req, opts...)
 }
 
@@ -139,7 +139,7 @@ type domainMappingsGRPCClient struct {
 	CallOptions **DomainMappingsCallOptions
 
 	// The gRPC API client.
-	domainMappingsClient runpb.DomainMappingsClient
+	domainMappingsClient pb.DomainMappingsClient
 
 	// The x-goog-* metadata to be sent with each request.
 	xGoogMetadata metadata.MD
@@ -171,7 +171,7 @@ func NewDomainMappingsClient(ctx context.Context, opts ...option.ClientOption) (
 	c := &domainMappingsGRPCClient{
 		connPool:             connPool,
 		disableDeadlines:     disableDeadlines,
-		domainMappingsClient: runpb.NewDomainMappingsClient(connPool),
+		domainMappingsClient: pb.NewDomainMappingsClient(connPool),
 		CallOptions:          &client.CallOptions,
 	}
 	c.setGoogleClientInfo()
@@ -203,7 +203,7 @@ func (c *domainMappingsGRPCClient) Close() error {
 	return c.connPool.Close()
 }
 
-func (c *domainMappingsGRPCClient) CreateDomainMapping(ctx context.Context, req *runpb.CreateDomainMappingRequest, opts ...gax.CallOption) (*runpb.DomainMapping, error) {
+func (c *domainMappingsGRPCClient) CreateDomainMapping(ctx context.Context, req *pb.CreateDomainMappingRequest, opts ...gax.CallOption) (*pb.DomainMapping, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -211,7 +211,7 @@ func (c *domainMappingsGRPCClient) CreateDomainMapping(ctx context.Context, req 
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).CreateDomainMapping[0:len((*c.CallOptions).CreateDomainMapping):len((*c.CallOptions).CreateDomainMapping)], opts...)
-	var resp *runpb.DomainMapping
+	var resp *pb.DomainMapping
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.domainMappingsClient.CreateDomainMapping(ctx, req, settings.GRPC...)
@@ -223,7 +223,7 @@ func (c *domainMappingsGRPCClient) CreateDomainMapping(ctx context.Context, req 
 	return resp, nil
 }
 
-func (c *domainMappingsGRPCClient) DeleteDomainMapping(ctx context.Context, req *runpb.DeleteDomainMappingRequest, opts ...gax.CallOption) (*metapb.Status, error) {
+func (c *domainMappingsGRPCClient) DeleteDomainMapping(ctx context.Context, req *pb.DeleteDomainMappingRequest, opts ...gax.CallOption) (*metapb.Status, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -243,7 +243,7 @@ func (c *domainMappingsGRPCClient) DeleteDomainMapping(ctx context.Context, req 
 	return resp, nil
 }
 
-func (c *domainMappingsGRPCClient) GetDomainMapping(ctx context.Context, req *runpb.GetDomainMappingRequest, opts ...gax.CallOption) (*runpb.DomainMapping, error) {
+func (c *domainMappingsGRPCClient) GetDomainMapping(ctx context.Context, req *pb.GetDomainMappingRequest, opts ...gax.CallOption) (*pb.DomainMapping, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -251,7 +251,7 @@ func (c *domainMappingsGRPCClient) GetDomainMapping(ctx context.Context, req *ru
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).GetDomainMapping[0:len((*c.CallOptions).GetDomainMapping):len((*c.CallOptions).GetDomainMapping)], opts...)
-	var resp *runpb.DomainMapping
+	var resp *pb.DomainMapping
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.domainMappingsClient.GetDomainMapping(ctx, req, settings.GRPC...)
@@ -263,7 +263,7 @@ func (c *domainMappingsGRPCClient) GetDomainMapping(ctx context.Context, req *ru
 	return resp, nil
 }
 
-func (c *domainMappingsGRPCClient) ListDomainMappings(ctx context.Context, req *runpb.ListDomainMappingsRequest, opts ...gax.CallOption) (*runpb.ListDomainMappingsResponse, error) {
+func (c *domainMappingsGRPCClient) ListDomainMappings(ctx context.Context, req *pb.ListDomainMappingsRequest, opts ...gax.CallOption) (*pb.ListDomainMappingsResponse, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -271,7 +271,7 @@ func (c *domainMappingsGRPCClient) ListDomainMappings(ctx context.Context, req *
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).ListDomainMappings[0:len((*c.CallOptions).ListDomainMappings):len((*c.CallOptions).ListDomainMappings)], opts...)
-	var resp *runpb.ListDomainMappingsResponse
+	var resp *pb.ListDomainMappingsResponse
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.domainMappingsClient.ListDomainMappings(ctx, req, settings.GRPC...)

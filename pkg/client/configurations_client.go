@@ -21,7 +21,7 @@ import (
 	"math"
 	"time"
 
-	runpb "github.com/cristian-radu/cloud-run-grpc-client/pkg/pb/run"
+	pb "github.com/cristian-radu/cloud-run-grpc/pkg/pb"
 	gax "github.com/googleapis/gax-go/v2"
 	"google.golang.org/api/option"
 	"google.golang.org/api/option/internaloption"
@@ -62,8 +62,8 @@ type internalConfigurationsClient interface {
 	Close() error
 	setGoogleClientInfo(...string)
 	Connection() *grpc.ClientConn
-	GetConfiguration(context.Context, *runpb.GetConfigurationRequest, ...gax.CallOption) (*runpb.Configuration, error)
-	ListConfigurations(context.Context, *runpb.ListConfigurationsRequest, ...gax.CallOption) (*runpb.ListConfigurationsResponse, error)
+	GetConfiguration(context.Context, *pb.GetConfigurationRequest, ...gax.CallOption) (*pb.Configuration, error)
+	ListConfigurations(context.Context, *pb.ListConfigurationsRequest, ...gax.CallOption) (*pb.ListConfigurationsResponse, error)
 }
 
 // ConfigurationsClient is a client for interacting with Cloud Run Admin API.
@@ -99,12 +99,12 @@ func (c *ConfigurationsClient) Connection() *grpc.ClientConn {
 }
 
 // GetConfiguration get information about a configuration.
-func (c *ConfigurationsClient) GetConfiguration(ctx context.Context, req *runpb.GetConfigurationRequest, opts ...gax.CallOption) (*runpb.Configuration, error) {
+func (c *ConfigurationsClient) GetConfiguration(ctx context.Context, req *pb.GetConfigurationRequest, opts ...gax.CallOption) (*pb.Configuration, error) {
 	return c.internalClient.GetConfiguration(ctx, req, opts...)
 }
 
 // ListConfigurations list configurations.
-func (c *ConfigurationsClient) ListConfigurations(ctx context.Context, req *runpb.ListConfigurationsRequest, opts ...gax.CallOption) (*runpb.ListConfigurationsResponse, error) {
+func (c *ConfigurationsClient) ListConfigurations(ctx context.Context, req *pb.ListConfigurationsRequest, opts ...gax.CallOption) (*pb.ListConfigurationsResponse, error) {
 	return c.internalClient.ListConfigurations(ctx, req, opts...)
 }
 
@@ -122,7 +122,7 @@ type configurationsGRPCClient struct {
 	CallOptions **ConfigurationsCallOptions
 
 	// The gRPC API client.
-	configurationsClient runpb.ConfigurationsClient
+	configurationsClient pb.ConfigurationsClient
 
 	// The x-goog-* metadata to be sent with each request.
 	xGoogMetadata metadata.MD
@@ -154,7 +154,7 @@ func NewConfigurationsClient(ctx context.Context, opts ...option.ClientOption) (
 	c := &configurationsGRPCClient{
 		connPool:             connPool,
 		disableDeadlines:     disableDeadlines,
-		configurationsClient: runpb.NewConfigurationsClient(connPool),
+		configurationsClient: pb.NewConfigurationsClient(connPool),
 		CallOptions:          &client.CallOptions,
 	}
 	c.setGoogleClientInfo()
@@ -186,7 +186,7 @@ func (c *configurationsGRPCClient) Close() error {
 	return c.connPool.Close()
 }
 
-func (c *configurationsGRPCClient) GetConfiguration(ctx context.Context, req *runpb.GetConfigurationRequest, opts ...gax.CallOption) (*runpb.Configuration, error) {
+func (c *configurationsGRPCClient) GetConfiguration(ctx context.Context, req *pb.GetConfigurationRequest, opts ...gax.CallOption) (*pb.Configuration, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -194,7 +194,7 @@ func (c *configurationsGRPCClient) GetConfiguration(ctx context.Context, req *ru
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).GetConfiguration[0:len((*c.CallOptions).GetConfiguration):len((*c.CallOptions).GetConfiguration)], opts...)
-	var resp *runpb.Configuration
+	var resp *pb.Configuration
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.configurationsClient.GetConfiguration(ctx, req, settings.GRPC...)
@@ -206,7 +206,7 @@ func (c *configurationsGRPCClient) GetConfiguration(ctx context.Context, req *ru
 	return resp, nil
 }
 
-func (c *configurationsGRPCClient) ListConfigurations(ctx context.Context, req *runpb.ListConfigurationsRequest, opts ...gax.CallOption) (*runpb.ListConfigurationsResponse, error) {
+func (c *configurationsGRPCClient) ListConfigurations(ctx context.Context, req *pb.ListConfigurationsRequest, opts ...gax.CallOption) (*pb.ListConfigurationsResponse, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -214,7 +214,7 @@ func (c *configurationsGRPCClient) ListConfigurations(ctx context.Context, req *
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).ListConfigurations[0:len((*c.CallOptions).ListConfigurations):len((*c.CallOptions).ListConfigurations)], opts...)
-	var resp *runpb.ListConfigurationsResponse
+	var resp *pb.ListConfigurationsResponse
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.configurationsClient.ListConfigurations(ctx, req, settings.GRPC...)

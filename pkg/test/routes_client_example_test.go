@@ -19,8 +19,8 @@ package test
 import (
 	"context"
 
-	run "github.com/cristian-radu/cloud-run-grpc-client/pkg/client"
-	runpb "github.com/cristian-radu/cloud-run-grpc-client/pkg/pb/run"
+	run "github.com/cristian-radu/cloud-run-grpc/pkg/client"
+	pb "github.com/cristian-radu/cloud-run-grpc/pkg/pb"
 )
 
 func ExampleNewRoutesClient() {
@@ -43,7 +43,7 @@ func ExampleRoutesClient_GetRoute() {
 	}
 	defer c.Close()
 
-	req := &runpb.GetRouteRequest{
+	req := &pb.GetRouteRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.GetRoute(ctx, req)
@@ -62,7 +62,7 @@ func ExampleRoutesClient_ListRoutes() {
 	}
 	defer c.Close()
 
-	req := &runpb.ListRoutesRequest{
+	req := &pb.ListRoutesRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.ListRoutes(ctx, req)

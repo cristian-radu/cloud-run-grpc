@@ -21,7 +21,7 @@ import (
 	"math"
 	"time"
 
-	runpb "github.com/cristian-radu/cloud-run-grpc-client/pkg/pb/run"
+	pb "github.com/cristian-radu/cloud-run-grpc/pkg/pb"
 	gax "github.com/googleapis/gax-go/v2"
 	"google.golang.org/api/option"
 	"google.golang.org/api/option/internaloption"
@@ -65,9 +65,9 @@ type internalRevisionsClient interface {
 	Close() error
 	setGoogleClientInfo(...string)
 	Connection() *grpc.ClientConn
-	GetRevision(context.Context, *runpb.GetRevisionRequest, ...gax.CallOption) (*runpb.Revision, error)
-	ListRevisions(context.Context, *runpb.ListRevisionsRequest, ...gax.CallOption) (*runpb.ListRevisionsResponse, error)
-	DeleteRevision(context.Context, *runpb.DeleteRevisionRequest, ...gax.CallOption) (*metapb.Status, error)
+	GetRevision(context.Context, *pb.GetRevisionRequest, ...gax.CallOption) (*pb.Revision, error)
+	ListRevisions(context.Context, *pb.ListRevisionsRequest, ...gax.CallOption) (*pb.ListRevisionsResponse, error)
+	DeleteRevision(context.Context, *pb.DeleteRevisionRequest, ...gax.CallOption) (*metapb.Status, error)
 }
 
 // RevisionsClient is a client for interacting with Cloud Run Admin API.
@@ -103,17 +103,17 @@ func (c *RevisionsClient) Connection() *grpc.ClientConn {
 }
 
 // GetRevision get information about a revision.
-func (c *RevisionsClient) GetRevision(ctx context.Context, req *runpb.GetRevisionRequest, opts ...gax.CallOption) (*runpb.Revision, error) {
+func (c *RevisionsClient) GetRevision(ctx context.Context, req *pb.GetRevisionRequest, opts ...gax.CallOption) (*pb.Revision, error) {
 	return c.internalClient.GetRevision(ctx, req, opts...)
 }
 
 // ListRevisions list revisions.
-func (c *RevisionsClient) ListRevisions(ctx context.Context, req *runpb.ListRevisionsRequest, opts ...gax.CallOption) (*runpb.ListRevisionsResponse, error) {
+func (c *RevisionsClient) ListRevisions(ctx context.Context, req *pb.ListRevisionsRequest, opts ...gax.CallOption) (*pb.ListRevisionsResponse, error) {
 	return c.internalClient.ListRevisions(ctx, req, opts...)
 }
 
 // DeleteRevision delete a revision.
-func (c *RevisionsClient) DeleteRevision(ctx context.Context, req *runpb.DeleteRevisionRequest, opts ...gax.CallOption) (*metapb.Status, error) {
+func (c *RevisionsClient) DeleteRevision(ctx context.Context, req *pb.DeleteRevisionRequest, opts ...gax.CallOption) (*metapb.Status, error) {
 	return c.internalClient.DeleteRevision(ctx, req, opts...)
 }
 
@@ -131,7 +131,7 @@ type revisionsGRPCClient struct {
 	CallOptions **RevisionsCallOptions
 
 	// The gRPC API client.
-	revisionsClient runpb.RevisionsClient
+	revisionsClient pb.RevisionsClient
 
 	// The x-goog-* metadata to be sent with each request.
 	xGoogMetadata metadata.MD
@@ -163,7 +163,7 @@ func NewRevisionsClient(ctx context.Context, opts ...option.ClientOption) (*Revi
 	c := &revisionsGRPCClient{
 		connPool:         connPool,
 		disableDeadlines: disableDeadlines,
-		revisionsClient:  runpb.NewRevisionsClient(connPool),
+		revisionsClient:  pb.NewRevisionsClient(connPool),
 		CallOptions:      &client.CallOptions,
 	}
 	c.setGoogleClientInfo()
@@ -195,7 +195,7 @@ func (c *revisionsGRPCClient) Close() error {
 	return c.connPool.Close()
 }
 
-func (c *revisionsGRPCClient) GetRevision(ctx context.Context, req *runpb.GetRevisionRequest, opts ...gax.CallOption) (*runpb.Revision, error) {
+func (c *revisionsGRPCClient) GetRevision(ctx context.Context, req *pb.GetRevisionRequest, opts ...gax.CallOption) (*pb.Revision, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -203,7 +203,7 @@ func (c *revisionsGRPCClient) GetRevision(ctx context.Context, req *runpb.GetRev
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).GetRevision[0:len((*c.CallOptions).GetRevision):len((*c.CallOptions).GetRevision)], opts...)
-	var resp *runpb.Revision
+	var resp *pb.Revision
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.revisionsClient.GetRevision(ctx, req, settings.GRPC...)
@@ -215,7 +215,7 @@ func (c *revisionsGRPCClient) GetRevision(ctx context.Context, req *runpb.GetRev
 	return resp, nil
 }
 
-func (c *revisionsGRPCClient) ListRevisions(ctx context.Context, req *runpb.ListRevisionsRequest, opts ...gax.CallOption) (*runpb.ListRevisionsResponse, error) {
+func (c *revisionsGRPCClient) ListRevisions(ctx context.Context, req *pb.ListRevisionsRequest, opts ...gax.CallOption) (*pb.ListRevisionsResponse, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -223,7 +223,7 @@ func (c *revisionsGRPCClient) ListRevisions(ctx context.Context, req *runpb.List
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).ListRevisions[0:len((*c.CallOptions).ListRevisions):len((*c.CallOptions).ListRevisions)], opts...)
-	var resp *runpb.ListRevisionsResponse
+	var resp *pb.ListRevisionsResponse
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.revisionsClient.ListRevisions(ctx, req, settings.GRPC...)
@@ -235,7 +235,7 @@ func (c *revisionsGRPCClient) ListRevisions(ctx context.Context, req *runpb.List
 	return resp, nil
 }
 
-func (c *revisionsGRPCClient) DeleteRevision(ctx context.Context, req *runpb.DeleteRevisionRequest, opts ...gax.CallOption) (*metapb.Status, error) {
+func (c *revisionsGRPCClient) DeleteRevision(ctx context.Context, req *pb.DeleteRevisionRequest, opts ...gax.CallOption) (*metapb.Status, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()

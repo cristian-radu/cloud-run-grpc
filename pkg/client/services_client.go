@@ -21,7 +21,7 @@ import (
 	"math"
 	"time"
 
-	runpb "github.com/cristian-radu/cloud-run-grpc-client/pkg/pb/run"
+	pb "github.com/cristian-radu/cloud-run-grpc/pkg/pb"
 	gax "github.com/googleapis/gax-go/v2"
 	"google.golang.org/api/option"
 	"google.golang.org/api/option/internaloption"
@@ -76,11 +76,11 @@ type internalServicesClient interface {
 	Close() error
 	setGoogleClientInfo(...string)
 	Connection() *grpc.ClientConn
-	CreateService(context.Context, *runpb.CreateServiceRequest, ...gax.CallOption) (*runpb.Service, error)
-	GetService(context.Context, *runpb.GetServiceRequest, ...gax.CallOption) (*runpb.Service, error)
-	ListServices(context.Context, *runpb.ListServicesRequest, ...gax.CallOption) (*runpb.ListServicesResponse, error)
-	ReplaceService(context.Context, *runpb.ReplaceServiceRequest, ...gax.CallOption) (*runpb.Service, error)
-	DeleteService(context.Context, *runpb.DeleteServiceRequest, ...gax.CallOption) (*metapb.Status, error)
+	CreateService(context.Context, *pb.CreateServiceRequest, ...gax.CallOption) (*pb.Service, error)
+	GetService(context.Context, *pb.GetServiceRequest, ...gax.CallOption) (*pb.Service, error)
+	ListServices(context.Context, *pb.ListServicesRequest, ...gax.CallOption) (*pb.ListServicesResponse, error)
+	ReplaceService(context.Context, *pb.ReplaceServiceRequest, ...gax.CallOption) (*pb.Service, error)
+	DeleteService(context.Context, *pb.DeleteServiceRequest, ...gax.CallOption) (*metapb.Status, error)
 	TestIamPermissions(context.Context, *iampb.TestIamPermissionsRequest, ...gax.CallOption) (*iampb.TestIamPermissionsResponse, error)
 	GetIamPolicy(context.Context, *iampb.GetIamPolicyRequest, ...gax.CallOption) (*iampb.Policy, error)
 	SetIamPolicy(context.Context, *iampb.SetIamPolicyRequest, ...gax.CallOption) (*iampb.Policy, error)
@@ -119,17 +119,17 @@ func (c *ServicesClient) Connection() *grpc.ClientConn {
 }
 
 // CreateService create a service.
-func (c *ServicesClient) CreateService(ctx context.Context, req *runpb.CreateServiceRequest, opts ...gax.CallOption) (*runpb.Service, error) {
+func (c *ServicesClient) CreateService(ctx context.Context, req *pb.CreateServiceRequest, opts ...gax.CallOption) (*pb.Service, error) {
 	return c.internalClient.CreateService(ctx, req, opts...)
 }
 
 // GetService get information about a service.
-func (c *ServicesClient) GetService(ctx context.Context, req *runpb.GetServiceRequest, opts ...gax.CallOption) (*runpb.Service, error) {
+func (c *ServicesClient) GetService(ctx context.Context, req *pb.GetServiceRequest, opts ...gax.CallOption) (*pb.Service, error) {
 	return c.internalClient.GetService(ctx, req, opts...)
 }
 
 // ListServices list services.
-func (c *ServicesClient) ListServices(ctx context.Context, req *runpb.ListServicesRequest, opts ...gax.CallOption) (*runpb.ListServicesResponse, error) {
+func (c *ServicesClient) ListServices(ctx context.Context, req *pb.ListServicesRequest, opts ...gax.CallOption) (*pb.ListServicesResponse, error) {
 	return c.internalClient.ListServices(ctx, req, opts...)
 }
 
@@ -137,13 +137,13 @@ func (c *ServicesClient) ListServices(ctx context.Context, req *runpb.ListServic
 // Only the spec and metadata labels and annotations are modifiable. After the Update request,
 // Cloud Run will work to make the ‘status’ match the requested ‘spec’.
 // May provide metadata.resourceVersion to enforce update from last read for optimistic concurrency control.
-func (c *ServicesClient) ReplaceService(ctx context.Context, req *runpb.ReplaceServiceRequest, opts ...gax.CallOption) (*runpb.Service, error) {
+func (c *ServicesClient) ReplaceService(ctx context.Context, req *pb.ReplaceServiceRequest, opts ...gax.CallOption) (*pb.Service, error) {
 	return c.internalClient.ReplaceService(ctx, req, opts...)
 }
 
 // DeleteService delete a service. This will cause the Service to stop serving traffic and will delete the child entities
 // like Routes, Configurations and Revisions.
-func (c *ServicesClient) DeleteService(ctx context.Context, req *runpb.DeleteServiceRequest, opts ...gax.CallOption) (*metapb.Status, error) {
+func (c *ServicesClient) DeleteService(ctx context.Context, req *pb.DeleteServiceRequest, opts ...gax.CallOption) (*metapb.Status, error) {
 	return c.internalClient.DeleteService(ctx, req, opts...)
 }
 
@@ -178,7 +178,7 @@ type servicesGRPCClient struct {
 	CallOptions **ServicesCallOptions
 
 	// The gRPC API client.
-	servicesClient runpb.ServicesClient
+	servicesClient pb.ServicesClient
 
 	// The x-goog-* metadata to be sent with each request.
 	xGoogMetadata metadata.MD
@@ -210,7 +210,7 @@ func NewServicesClient(ctx context.Context, opts ...option.ClientOption) (*Servi
 	c := &servicesGRPCClient{
 		connPool:         connPool,
 		disableDeadlines: disableDeadlines,
-		servicesClient:   runpb.NewServicesClient(connPool),
+		servicesClient:   pb.NewServicesClient(connPool),
 		CallOptions:      &client.CallOptions,
 	}
 	c.setGoogleClientInfo()
@@ -242,7 +242,7 @@ func (c *servicesGRPCClient) Close() error {
 	return c.connPool.Close()
 }
 
-func (c *servicesGRPCClient) CreateService(ctx context.Context, req *runpb.CreateServiceRequest, opts ...gax.CallOption) (*runpb.Service, error) {
+func (c *servicesGRPCClient) CreateService(ctx context.Context, req *pb.CreateServiceRequest, opts ...gax.CallOption) (*pb.Service, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -250,7 +250,7 @@ func (c *servicesGRPCClient) CreateService(ctx context.Context, req *runpb.Creat
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).CreateService[0:len((*c.CallOptions).CreateService):len((*c.CallOptions).CreateService)], opts...)
-	var resp *runpb.Service
+	var resp *pb.Service
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.servicesClient.CreateService(ctx, req, settings.GRPC...)
@@ -262,7 +262,7 @@ func (c *servicesGRPCClient) CreateService(ctx context.Context, req *runpb.Creat
 	return resp, nil
 }
 
-func (c *servicesGRPCClient) GetService(ctx context.Context, req *runpb.GetServiceRequest, opts ...gax.CallOption) (*runpb.Service, error) {
+func (c *servicesGRPCClient) GetService(ctx context.Context, req *pb.GetServiceRequest, opts ...gax.CallOption) (*pb.Service, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -270,7 +270,7 @@ func (c *servicesGRPCClient) GetService(ctx context.Context, req *runpb.GetServi
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).GetService[0:len((*c.CallOptions).GetService):len((*c.CallOptions).GetService)], opts...)
-	var resp *runpb.Service
+	var resp *pb.Service
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.servicesClient.GetService(ctx, req, settings.GRPC...)
@@ -282,7 +282,7 @@ func (c *servicesGRPCClient) GetService(ctx context.Context, req *runpb.GetServi
 	return resp, nil
 }
 
-func (c *servicesGRPCClient) ListServices(ctx context.Context, req *runpb.ListServicesRequest, opts ...gax.CallOption) (*runpb.ListServicesResponse, error) {
+func (c *servicesGRPCClient) ListServices(ctx context.Context, req *pb.ListServicesRequest, opts ...gax.CallOption) (*pb.ListServicesResponse, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -290,7 +290,7 @@ func (c *servicesGRPCClient) ListServices(ctx context.Context, req *runpb.ListSe
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).ListServices[0:len((*c.CallOptions).ListServices):len((*c.CallOptions).ListServices)], opts...)
-	var resp *runpb.ListServicesResponse
+	var resp *pb.ListServicesResponse
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.servicesClient.ListServices(ctx, req, settings.GRPC...)
@@ -302,7 +302,7 @@ func (c *servicesGRPCClient) ListServices(ctx context.Context, req *runpb.ListSe
 	return resp, nil
 }
 
-func (c *servicesGRPCClient) ReplaceService(ctx context.Context, req *runpb.ReplaceServiceRequest, opts ...gax.CallOption) (*runpb.Service, error) {
+func (c *servicesGRPCClient) ReplaceService(ctx context.Context, req *pb.ReplaceServiceRequest, opts ...gax.CallOption) (*pb.Service, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -310,7 +310,7 @@ func (c *servicesGRPCClient) ReplaceService(ctx context.Context, req *runpb.Repl
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).ReplaceService[0:len((*c.CallOptions).ReplaceService):len((*c.CallOptions).ReplaceService)], opts...)
-	var resp *runpb.Service
+	var resp *pb.Service
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.servicesClient.ReplaceService(ctx, req, settings.GRPC...)
@@ -322,7 +322,7 @@ func (c *servicesGRPCClient) ReplaceService(ctx context.Context, req *runpb.Repl
 	return resp, nil
 }
 
-func (c *servicesGRPCClient) DeleteService(ctx context.Context, req *runpb.DeleteServiceRequest, opts ...gax.CallOption) (*metapb.Status, error) {
+func (c *servicesGRPCClient) DeleteService(ctx context.Context, req *pb.DeleteServiceRequest, opts ...gax.CallOption) (*metapb.Status, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()

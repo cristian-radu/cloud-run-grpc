@@ -19,8 +19,8 @@ package test
 import (
 	"context"
 
-	run "github.com/cristian-radu/cloud-run-grpc-client/pkg/client"
-	runpb "github.com/cristian-radu/cloud-run-grpc-client/pkg/pb/run"
+	run "github.com/cristian-radu/cloud-run-grpc/pkg/client"
+	pb "github.com/cristian-radu/cloud-run-grpc/pkg/pb"
 )
 
 func ExampleNewRevisionsClient() {
@@ -43,7 +43,7 @@ func ExampleRevisionsClient_GetRevision() {
 	}
 	defer c.Close()
 
-	req := &runpb.GetRevisionRequest{
+	req := &pb.GetRevisionRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.GetRevision(ctx, req)
@@ -62,7 +62,7 @@ func ExampleRevisionsClient_ListRevisions() {
 	}
 	defer c.Close()
 
-	req := &runpb.ListRevisionsRequest{
+	req := &pb.ListRevisionsRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.ListRevisions(ctx, req)
@@ -81,7 +81,7 @@ func ExampleRevisionsClient_DeleteRevision() {
 	}
 	defer c.Close()
 
-	req := &runpb.DeleteRevisionRequest{
+	req := &pb.DeleteRevisionRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.DeleteRevision(ctx, req)

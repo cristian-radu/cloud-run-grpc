@@ -4,7 +4,7 @@
 // 	protoc        v3.15.3
 // source: google/cloud/run/v1/configurations.proto
 
-package run
+package pb
 
 import (
 	context "context"

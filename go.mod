@@ -1,4 +1,4 @@
-module github.com/cristian-radu/cloud-run-grpc-client
+module github.com/cristian-radu/cloud-run-grpc
 
 go 1.16
 

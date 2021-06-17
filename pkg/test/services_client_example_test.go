@@ -19,8 +19,8 @@ package test
 import (
 	"context"
 
-	run "github.com/cristian-radu/cloud-run-grpc-client/pkg/client"
-	runpb "github.com/cristian-radu/cloud-run-grpc-client/pkg/pb/run"
+	run "github.com/cristian-radu/cloud-run-grpc/pkg/client"
+	pb "github.com/cristian-radu/cloud-run-grpc/pkg/pb"
 	iampb "google.golang.org/genproto/googleapis/iam/v1"
 )
 
@@ -44,7 +44,7 @@ func ExampleServicesClient_CreateService() {
 	}
 	defer c.Close()
 
-	req := &runpb.CreateServiceRequest{
+	req := &pb.CreateServiceRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.CreateService(ctx, req)
@@ -63,7 +63,7 @@ func ExampleServicesClient_GetService() {
 	}
 	defer c.Close()
 
-	req := &runpb.GetServiceRequest{
+	req := &pb.GetServiceRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.GetService(ctx, req)
@@ -82,7 +82,7 @@ func ExampleServicesClient_ListServices() {
 	}
 	defer c.Close()
 
-	req := &runpb.ListServicesRequest{
+	req := &pb.ListServicesRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.ListServices(ctx, req)
@@ -101,7 +101,7 @@ func ExampleServicesClient_ReplaceService() {
 	}
 	defer c.Close()
 
-	req := &runpb.ReplaceServiceRequest{
+	req := &pb.ReplaceServiceRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.ReplaceService(ctx, req)
@@ -120,7 +120,7 @@ func ExampleServicesClient_DeleteService() {
 	}
 	defer c.Close()
 
-	req := &runpb.DeleteServiceRequest{
+	req := &pb.DeleteServiceRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.DeleteService(ctx, req)

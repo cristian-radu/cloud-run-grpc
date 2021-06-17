@@ -21,7 +21,7 @@ import (
 	"math"
 	"time"
 
-	runpb "github.com/cristian-radu/cloud-run-grpc-client/pkg/pb/run"
+	pb "github.com/cristian-radu/cloud-run-grpc/pkg/pb"
 	gax "github.com/googleapis/gax-go/v2"
 	"google.golang.org/api/option"
 	"google.golang.org/api/option/internaloption"
@@ -62,8 +62,8 @@ type internalRoutesClient interface {
 	Close() error
 	setGoogleClientInfo(...string)
 	Connection() *grpc.ClientConn
-	GetRoute(context.Context, *runpb.GetRouteRequest, ...gax.CallOption) (*runpb.Route, error)
-	ListRoutes(context.Context, *runpb.ListRoutesRequest, ...gax.CallOption) (*runpb.ListRoutesResponse, error)
+	GetRoute(context.Context, *pb.GetRouteRequest, ...gax.CallOption) (*pb.Route, error)
+	ListRoutes(context.Context, *pb.ListRoutesRequest, ...gax.CallOption) (*pb.ListRoutesResponse, error)
 }
 
 // RoutesClient is a client for interacting with Cloud Run Admin API.
@@ -99,12 +99,12 @@ func (c *RoutesClient) Connection() *grpc.ClientConn {
 }
 
 // GetRoute get information about a route.
-func (c *RoutesClient) GetRoute(ctx context.Context, req *runpb.GetRouteRequest, opts ...gax.CallOption) (*runpb.Route, error) {
+func (c *RoutesClient) GetRoute(ctx context.Context, req *pb.GetRouteRequest, opts ...gax.CallOption) (*pb.Route, error) {
 	return c.internalClient.GetRoute(ctx, req, opts...)
 }
 
 // ListRoutes list routes.
-func (c *RoutesClient) ListRoutes(ctx context.Context, req *runpb.ListRoutesRequest, opts ...gax.CallOption) (*runpb.ListRoutesResponse, error) {
+func (c *RoutesClient) ListRoutes(ctx context.Context, req *pb.ListRoutesRequest, opts ...gax.CallOption) (*pb.ListRoutesResponse, error) {
 	return c.internalClient.ListRoutes(ctx, req, opts...)
 }
 
@@ -122,7 +122,7 @@ type routesGRPCClient struct {
 	CallOptions **RoutesCallOptions
 
 	// The gRPC API client.
-	routesClient runpb.RoutesClient
+	routesClient pb.RoutesClient
 
 	// The x-goog-* metadata to be sent with each request.
 	xGoogMetadata metadata.MD
@@ -154,7 +154,7 @@ func NewRoutesClient(ctx context.Context, opts ...option.ClientOption) (*RoutesC
 	c := &routesGRPCClient{
 		connPool:         connPool,
 		disableDeadlines: disableDeadlines,
-		routesClient:     runpb.NewRoutesClient(connPool),
+		routesClient:     pb.NewRoutesClient(connPool),
 		CallOptions:      &client.CallOptions,
 	}
 	c.setGoogleClientInfo()
@@ -186,7 +186,7 @@ func (c *routesGRPCClient) Close() error {
 	return c.connPool.Close()
 }
 
-func (c *routesGRPCClient) GetRoute(ctx context.Context, req *runpb.GetRouteRequest, opts ...gax.CallOption) (*runpb.Route, error) {
+func (c *routesGRPCClient) GetRoute(ctx context.Context, req *pb.GetRouteRequest, opts ...gax.CallOption) (*pb.Route, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -194,7 +194,7 @@ func (c *routesGRPCClient) GetRoute(ctx context.Context, req *runpb.GetRouteRequ
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).GetRoute[0:len((*c.CallOptions).GetRoute):len((*c.CallOptions).GetRoute)], opts...)
-	var resp *runpb.Route
+	var resp *pb.Route
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.routesClient.GetRoute(ctx, req, settings.GRPC...)
@@ -206,7 +206,7 @@ func (c *routesGRPCClient) GetRoute(ctx context.Context, req *runpb.GetRouteRequ
 	return resp, nil
 }
 
-func (c *routesGRPCClient) ListRoutes(ctx context.Context, req *runpb.ListRoutesRequest, opts ...gax.CallOption) (*runpb.ListRoutesResponse, error) {
+func (c *routesGRPCClient) ListRoutes(ctx context.Context, req *pb.ListRoutesRequest, opts ...gax.CallOption) (*pb.ListRoutesResponse, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -214,7 +214,7 @@ func (c *routesGRPCClient) ListRoutes(ctx context.Context, req *runpb.ListRoutes
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).ListRoutes[0:len((*c.CallOptions).ListRoutes):len((*c.CallOptions).ListRoutes)], opts...)
-	var resp *runpb.ListRoutesResponse
+	var resp *pb.ListRoutesResponse
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.routesClient.ListRoutes(ctx, req, settings.GRPC...)

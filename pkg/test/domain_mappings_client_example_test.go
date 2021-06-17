@@ -19,8 +19,8 @@ package test
 import (
 	"context"
 
-	run "github.com/cristian-radu/cloud-run-grpc-client/pkg/client"
-	runpb "github.com/cristian-radu/cloud-run-grpc-client/pkg/pb/run"
+	run "github.com/cristian-radu/cloud-run-grpc/pkg/client"
+	pb "github.com/cristian-radu/cloud-run-grpc/pkg/pb"
 )
 
 func ExampleNewDomainMappingsClient() {
@@ -43,7 +43,7 @@ func ExampleDomainMappingsClient_CreateDomainMapping() {
 	}
 	defer c.Close()
 
-	req := &runpb.CreateDomainMappingRequest{
+	req := &pb.CreateDomainMappingRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.CreateDomainMapping(ctx, req)
@@ -62,7 +62,7 @@ func ExampleDomainMappingsClient_DeleteDomainMapping() {
 	}
 	defer c.Close()
 
-	req := &runpb.DeleteDomainMappingRequest{
+	req := &pb.DeleteDomainMappingRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.DeleteDomainMapping(ctx, req)
@@ -81,7 +81,7 @@ func ExampleDomainMappingsClient_GetDomainMapping() {
 	}
 	defer c.Close()
 
-	req := &runpb.GetDomainMappingRequest{
+	req := &pb.GetDomainMappingRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.GetDomainMapping(ctx, req)
@@ -100,7 +100,7 @@ func ExampleDomainMappingsClient_ListDomainMappings() {
 	}
 	defer c.Close()
 
-	req := &runpb.ListDomainMappingsRequest{
+	req := &pb.ListDomainMappingsRequest{
 		// TODO: Fill request struct fields.
 	}
 	resp, err := c.ListDomainMappings(ctx, req)

@@ -19,8 +19,8 @@ package test
 import (
 	"context"
 
-	run "github.com/cristian-radu/cloud-run-grpc-client/pkg/client"
-	runpb "github.com/cristian-radu/cloud-run-grpc-client/pkg/pb/run"
+	run "github.com/cristian-radu/cloud-run-grpc/pkg/client"
+	pb "github.com/cristian-radu/cloud-run-grpc/pkg/pb"
 	"google.golang.org/api/iterator"
 )
 
@@ -44,7 +44,7 @@ func ExampleAuthorizedDomainsClient_ListAuthorizedDomains() {
 	}
 	defer c.Close()
 
-	req := &runpb.ListAuthorizedDomainsRequest{
+	req := &pb.ListAuthorizedDomainsRequest{
 		// TODO: Fill request struct fields.
 	}
 	it := c.ListAuthorizedDomains(ctx, req)
