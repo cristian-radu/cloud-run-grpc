@@ -3,7 +3,6 @@ module github.com/cristian-radu/cloud-run-grpc
 go 1.16
 
 require (
-	github.com/gogo/protobuf v1.3.2
 	github.com/golang/protobuf v1.5.2
 	github.com/googleapis/gax-go/v2 v2.0.5
 	google.golang.org/api v0.48.0
