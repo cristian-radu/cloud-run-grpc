@@ -606,7 +606,7 @@ type ServiceSpec struct {
 	// Template holds the latest specification for the Revision to be stamped out.
 	Template *RevisionTemplate `protobuf:"bytes,1,opt,name=template,proto3" json:"template,omitempty"`
 	// Traffic specifies how to distribute traffic over a collection of Knative Revisions and Configurations.
-	Target []*TrafficTarget `protobuf:"bytes,2,rep,name=target,proto3" json:"target,omitempty"`
+	Traffic []*TrafficTarget `protobuf:"bytes,2,rep,name=traffic,proto3" json:"traffic,omitempty"`
 }
 
 func (x *ServiceSpec) Reset() {
