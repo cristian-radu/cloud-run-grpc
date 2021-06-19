@@ -313,7 +313,7 @@ type Container struct {
 	// Cloud Run fully managed: supported
 	// Cloud Run for Anthos: supported
 	// Compute Resources required by this container. More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
-	Respurces *ResourceRequirements `protobuf:"bytes,6,opt,name=respurces,proto3" json:"respurces,omitempty"`
+	Resources *ResourceRequirements `protobuf:"bytes,6,opt,name=Resources,proto3" json:"Resources,omitempty"`
 	// Cloud Run fully managed: not supported
 	// Cloud Run for Anthos: supported
 	// Container's working directory. If not specified, the container runtime's default will be used,
@@ -448,9 +448,9 @@ func (x *Container) GetEnv() []*EnvVar {
 	return nil
 }
 
-func (x *Container) GetRespurces() *ResourceRequirements {
+func (x *Container) GetResources() *ResourceRequirements {
 	if x != nil {
-		return x.Respurces
+		return x.Resources
 	}
 	return nil
 }
@@ -2215,7 +2215,7 @@ var file_google_cloud_run_v1_corev1_proto_depIdxs = []int32{
 	12, // 1: google.cloud.run.v1.ConfigMapKeySelector.local_object_reference:type_name -> google.cloud.run.v1.LocalObjectReference
 	11, // 2: google.cloud.run.v1.ConfigMapVolumeSource.items:type_name -> google.cloud.run.v1.KeyToPath
 	6,  // 3: google.cloud.run.v1.Container.env:type_name -> google.cloud.run.v1.EnvVar
-	14, // 4: google.cloud.run.v1.Container.respurces:type_name -> google.cloud.run.v1.ResourceRequirements
+	14, // 4: google.cloud.run.v1.Container.Resources:type_name -> google.cloud.run.v1.ResourceRequirements
 	4,  // 5: google.cloud.run.v1.Container.ports:type_name -> google.cloud.run.v1.ContainerPort
 	5,  // 6: google.cloud.run.v1.Container.env_from:type_name -> google.cloud.run.v1.EnvFromSource
 	21, // 7: google.cloud.run.v1.Container.volume_mounts:type_name -> google.cloud.run.v1.VolumeMount
