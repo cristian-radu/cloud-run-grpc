@@ -648,9 +648,9 @@ func (x *ServiceSpec) GetTemplate() *RevisionTemplate {
 	return nil
 }
 
-func (x *ServiceSpec) GetTarget() []*TrafficTarget {
+func (x *ServiceSpec) GetTraffic() []*TrafficTarget {
 	if x != nil {
-		return x.Target
+		return x.Traffic
 	}
 	return nil
 }
@@ -997,7 +997,7 @@ var file_google_cloud_run_v1_services_proto_depIdxs = []int32{
 	1,  // 5: google.cloud.run.v1.ListServicesResponse.items:type_name -> google.cloud.run.v1.Service
 	1,  // 6: google.cloud.run.v1.ReplaceServiceRequest.service:type_name -> google.cloud.run.v1.Service
 	11, // 7: google.cloud.run.v1.ServiceSpec.template:type_name -> google.cloud.run.v1.RevisionTemplate
-	12, // 8: google.cloud.run.v1.ServiceSpec.target:type_name -> google.cloud.run.v1.TrafficTarget
+	12, // 8: google.cloud.run.v1.ServiceSpec.traffic:type_name -> google.cloud.run.v1.TrafficTarget
 	13, // 9: google.cloud.run.v1.ServiceStatus.conditions:type_name -> google.cloud.run.v1.Condition
 	12, // 10: google.cloud.run.v1.ServiceStatus.traffic:type_name -> google.cloud.run.v1.TrafficTarget
 	14, // 11: google.cloud.run.v1.ServiceStatus.address:type_name -> google.cloud.run.v1.Addressable
