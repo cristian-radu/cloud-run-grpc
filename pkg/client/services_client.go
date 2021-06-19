@@ -29,7 +29,6 @@ import (
 	iampb "google.golang.org/genproto/googleapis/iam/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	metapb "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var newServicesClientHook clientHook
@@ -80,7 +79,7 @@ type internalServicesClient interface {
 	GetService(context.Context, *pb.GetServiceRequest, ...gax.CallOption) (*pb.Service, error)
 	ListServices(context.Context, *pb.ListServicesRequest, ...gax.CallOption) (*pb.ListServicesResponse, error)
 	ReplaceService(context.Context, *pb.ReplaceServiceRequest, ...gax.CallOption) (*pb.Service, error)
-	DeleteService(context.Context, *pb.DeleteServiceRequest, ...gax.CallOption) (*metapb.Status, error)
+	DeleteService(context.Context, *pb.DeleteServiceRequest, ...gax.CallOption) (*pb.Status, error)
 	TestIamPermissions(context.Context, *iampb.TestIamPermissionsRequest, ...gax.CallOption) (*iampb.TestIamPermissionsResponse, error)
 	GetIamPolicy(context.Context, *iampb.GetIamPolicyRequest, ...gax.CallOption) (*iampb.Policy, error)
 	SetIamPolicy(context.Context, *iampb.SetIamPolicyRequest, ...gax.CallOption) (*iampb.Policy, error)
@@ -143,7 +142,7 @@ func (c *ServicesClient) ReplaceService(ctx context.Context, req *pb.ReplaceServ
 
 // DeleteService delete a service. This will cause the Service to stop serving traffic and will delete the child entities
 // like Routes, Configurations and Revisions.
-func (c *ServicesClient) DeleteService(ctx context.Context, req *pb.DeleteServiceRequest, opts ...gax.CallOption) (*metapb.Status, error) {
+func (c *ServicesClient) DeleteService(ctx context.Context, req *pb.DeleteServiceRequest, opts ...gax.CallOption) (*pb.Status, error) {
 	return c.internalClient.DeleteService(ctx, req, opts...)
 }
 
@@ -322,7 +321,7 @@ func (c *servicesGRPCClient) ReplaceService(ctx context.Context, req *pb.Replace
 	return resp, nil
 }
 
-func (c *servicesGRPCClient) DeleteService(ctx context.Context, req *pb.DeleteServiceRequest, opts ...gax.CallOption) (*metapb.Status, error) {
+func (c *servicesGRPCClient) DeleteService(ctx context.Context, req *pb.DeleteServiceRequest, opts ...gax.CallOption) (*pb.Status, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -330,7 +329,7 @@ func (c *servicesGRPCClient) DeleteService(ctx context.Context, req *pb.DeleteSe
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).DeleteService[0:len((*c.CallOptions).DeleteService):len((*c.CallOptions).DeleteService)], opts...)
-	var resp *metapb.Status
+	var resp *pb.Status
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.servicesClient.DeleteService(ctx, req, settings.GRPC...)

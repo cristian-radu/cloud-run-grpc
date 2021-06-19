@@ -28,7 +28,6 @@ import (
 	gtransport "google.golang.org/api/transport/grpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	metapb "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var newDomainMappingsClientHook clientHook
@@ -68,7 +67,7 @@ type internalDomainMappingsClient interface {
 	setGoogleClientInfo(...string)
 	Connection() *grpc.ClientConn
 	CreateDomainMapping(context.Context, *pb.CreateDomainMappingRequest, ...gax.CallOption) (*pb.DomainMapping, error)
-	DeleteDomainMapping(context.Context, *pb.DeleteDomainMappingRequest, ...gax.CallOption) (*metapb.Status, error)
+	DeleteDomainMapping(context.Context, *pb.DeleteDomainMappingRequest, ...gax.CallOption) (*pb.Status, error)
 	GetDomainMapping(context.Context, *pb.GetDomainMappingRequest, ...gax.CallOption) (*pb.DomainMapping, error)
 	ListDomainMappings(context.Context, *pb.ListDomainMappingsRequest, ...gax.CallOption) (*pb.ListDomainMappingsResponse, error)
 }
@@ -111,7 +110,7 @@ func (c *DomainMappingsClient) CreateDomainMapping(ctx context.Context, req *pb.
 }
 
 // DeleteDomainMapping delete a domain mapping.
-func (c *DomainMappingsClient) DeleteDomainMapping(ctx context.Context, req *pb.DeleteDomainMappingRequest, opts ...gax.CallOption) (*metapb.Status, error) {
+func (c *DomainMappingsClient) DeleteDomainMapping(ctx context.Context, req *pb.DeleteDomainMappingRequest, opts ...gax.CallOption) (*pb.Status, error) {
 	return c.internalClient.DeleteDomainMapping(ctx, req, opts...)
 }
 
@@ -223,7 +222,7 @@ func (c *domainMappingsGRPCClient) CreateDomainMapping(ctx context.Context, req 
 	return resp, nil
 }
 
-func (c *domainMappingsGRPCClient) DeleteDomainMapping(ctx context.Context, req *pb.DeleteDomainMappingRequest, opts ...gax.CallOption) (*metapb.Status, error) {
+func (c *domainMappingsGRPCClient) DeleteDomainMapping(ctx context.Context, req *pb.DeleteDomainMappingRequest, opts ...gax.CallOption) (*pb.Status, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -231,7 +230,7 @@ func (c *domainMappingsGRPCClient) DeleteDomainMapping(ctx context.Context, req 
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).DeleteDomainMapping[0:len((*c.CallOptions).DeleteDomainMapping):len((*c.CallOptions).DeleteDomainMapping)], opts...)
-	var resp *metapb.Status
+	var resp *pb.Status
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.domainMappingsClient.DeleteDomainMapping(ctx, req, settings.GRPC...)

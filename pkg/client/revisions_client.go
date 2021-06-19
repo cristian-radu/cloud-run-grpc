@@ -28,7 +28,6 @@ import (
 	gtransport "google.golang.org/api/transport/grpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-	metapb "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var newRevisionsClientHook clientHook
@@ -67,7 +66,7 @@ type internalRevisionsClient interface {
 	Connection() *grpc.ClientConn
 	GetRevision(context.Context, *pb.GetRevisionRequest, ...gax.CallOption) (*pb.Revision, error)
 	ListRevisions(context.Context, *pb.ListRevisionsRequest, ...gax.CallOption) (*pb.ListRevisionsResponse, error)
-	DeleteRevision(context.Context, *pb.DeleteRevisionRequest, ...gax.CallOption) (*metapb.Status, error)
+	DeleteRevision(context.Context, *pb.DeleteRevisionRequest, ...gax.CallOption) (*pb.Status, error)
 }
 
 // RevisionsClient is a client for interacting with Cloud Run Admin API.
@@ -113,7 +112,7 @@ func (c *RevisionsClient) ListRevisions(ctx context.Context, req *pb.ListRevisio
 }
 
 // DeleteRevision delete a revision.
-func (c *RevisionsClient) DeleteRevision(ctx context.Context, req *pb.DeleteRevisionRequest, opts ...gax.CallOption) (*metapb.Status, error) {
+func (c *RevisionsClient) DeleteRevision(ctx context.Context, req *pb.DeleteRevisionRequest, opts ...gax.CallOption) (*pb.Status, error) {
 	return c.internalClient.DeleteRevision(ctx, req, opts...)
 }
 
@@ -235,7 +234,7 @@ func (c *revisionsGRPCClient) ListRevisions(ctx context.Context, req *pb.ListRev
 	return resp, nil
 }
 
-func (c *revisionsGRPCClient) DeleteRevision(ctx context.Context, req *pb.DeleteRevisionRequest, opts ...gax.CallOption) (*metapb.Status, error) {
+func (c *revisionsGRPCClient) DeleteRevision(ctx context.Context, req *pb.DeleteRevisionRequest, opts ...gax.CallOption) (*pb.Status, error) {
 	if _, ok := ctx.Deadline(); !ok && !c.disableDeadlines {
 		cctx, cancel := context.WithTimeout(ctx, 600000*time.Millisecond)
 		defer cancel()
@@ -243,7 +242,7 @@ func (c *revisionsGRPCClient) DeleteRevision(ctx context.Context, req *pb.Delete
 	}
 	ctx = insertMetadata(ctx, c.xGoogMetadata)
 	opts = append((*c.CallOptions).DeleteRevision[0:len((*c.CallOptions).DeleteRevision):len((*c.CallOptions).DeleteRevision)], opts...)
-	var resp *metapb.Status
+	var resp *pb.Status
 	err := gax.Invoke(ctx, func(ctx context.Context, settings gax.CallSettings) error {
 		var err error
 		resp, err = c.revisionsClient.DeleteRevision(ctx, req, settings.GRPC...)

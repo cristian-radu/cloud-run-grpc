@@ -30,7 +30,7 @@
 //
 // For information about setting deadlines, reusing contexts, and more
 // please visit https://pkg.go.dev/cloud.google.com/go.
-package client
+package client // import github.com/cristian-radu/cloud-run-grpc"
 
 import (
 	"context"
